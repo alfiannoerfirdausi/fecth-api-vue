@@ -1,13 +1,17 @@
 <script setup>
-// const props = defineProps({
-//   siomay: Object,
-// });
+import { useRouter } from "vue-router";
+
 const { productItem } = defineProps({
   productItem: Object,
 });
+
+const router = useRouter();
+function goDetail() {
+  router.push(`/productDetail/${productItem.id}`);
+}
 </script>
 <template>
-  <div class="product-card">
+  <div class="product-card" @click="goDetail">
     <img
       :src="productItem.image"
       :alt="productItem.title"
