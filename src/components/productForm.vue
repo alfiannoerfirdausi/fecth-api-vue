@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
+const props = defineProps({
+  productData: Object,
+});
 const toggle = ref(false);
 
 const title = ref("");
@@ -9,7 +12,21 @@ const price = ref("");
 const image = ref("");
 const id = ref("");
 
-const emit = defineEmits(["create-product"]);
+console.log(props.productData);
+
+watchEffect(() => {
+  title.value = props.productData?.title;
+  description.value = props.productData?.description;
+  price.value = props.productData?.price;
+  image.value = props.productData?.image;
+  id.value = props.productData?.id;
+});
+
+const update = computed(() => {
+  !!props.productData;
+});
+
+const emit = defineEmits(["create-product", "update-product"]);
 function saveProduct() {
   const dataProduct = {
     title: title.value,
@@ -17,7 +34,11 @@ function saveProduct() {
     price: price.value,
     image: image.value,
   };
-  emit("create-product", dataProduct);
+  if (update.value) {
+    emit("update-product", dataProduct);
+  } else {
+    emit("create-product", dataProduct);
+  }
 }
 </script>
 <template>
@@ -25,13 +46,13 @@ function saveProduct() {
     <button @click="toggle = !toggle">add Product</button>
     <div class="product-form" v-if="toggle">
       <form @submit.prevent="saveProduct">
-        <label for="title">{{ title }}Title:</label>
+        <label for="title">Title:</label>
         <input type="text" id="title" v-model="title" required />
-        <label for="description">{{ description }}Description:</label>
+        <label for="description">Description:</label>
         <input type="text" id="description" v-model="description" required />
-        <label for="price">{{ price }}Price:</label>
+        <label for="price">Price:</label>
         <input type="number" id="price" v-model="price" required />
-        <label for="image">{{ image }}Image:</label>
+        <label for="image">Image:</label>
         <input type="text" id="image" v-model="image" required />
         <button type="submit">Save</button>
         <button type="button">Close</button>
