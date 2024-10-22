@@ -1,6 +1,7 @@
 <script setup>
 import pagination from "@/components/pagination.vue";
 import product from "@/components/product.vue";
+import productform from "@/components/productForm.vue";
 import { ref, watchEffect } from "vue";
 import axios from "axios";
 
@@ -28,12 +29,22 @@ function changeHalaman(newAngka) {
   page.value = newAngka;
 }
 
+async function saveProduct(item) {
+  try {
+    await axios.post("http://localhost:3000/products", item);
+    getData();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 console.log(page.value);
 console.log(products);
 </script>
 <template>
   <div v-if="loading">Loading......</div>
   <main v-else>
+    <productform @create-product="saveProduct" />
     <div class="product-grid">
       <product
         v-for="(item, index) in products.data"
