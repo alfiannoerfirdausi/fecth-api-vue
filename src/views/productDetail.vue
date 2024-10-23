@@ -1,5 +1,5 @@
 <script setup>
-import formProduct from "@/components/productForm.vue";
+import productform from "@/components/productForm.vue";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -26,6 +26,24 @@ async function getData() {
     loading.value = false;
   }
 }
+
+async function updateProduct(item) {
+  try {
+    await axios.put(API_URL, item);
+    router.push("/");
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function delProduct() {
+  try {
+    await axios.delete(API_URL);
+    router.push("/");
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 <template>
   <div v-if="loading">loading........</div>
@@ -34,8 +52,9 @@ async function getData() {
     <img :src="product.image" :alt="product.title" class="product-image" />
     <p>{{ product.description }}</p>
     <p>Rp{{ product.price }}</p>
-    <formProduct :productData="product" />
+    <productform :productData="product" @update-product="updateProduct" />
     <router-link to="/" class="back-button">Back</router-link>
+    <button class="delete-button" @click="delProduct">Delete</button>
   </div>
 </template>
 <style scoped>

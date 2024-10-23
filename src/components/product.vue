@@ -6,7 +6,8 @@ const { productItem } = defineProps({
 });
 
 const router = useRouter();
-function goDetail() {
+function goDetail(e) {
+  console.log(e);
   router.push(`/productDetail/${productItem.id}`);
 }
 </script>

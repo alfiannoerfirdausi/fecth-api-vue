@@ -22,9 +22,7 @@ watchEffect(() => {
   id.value = props.productData?.id;
 });
 
-const update = computed(() => {
-  !!props.productData;
-});
+const update = computed(() => !!props.productData);
 
 const emit = defineEmits(["create-product", "update-product"]);
 function saveProduct() {
@@ -43,7 +41,9 @@ function saveProduct() {
 </script>
 <template>
   <div class="form-container">
-    <button @click="toggle = !toggle">add Product</button>
+    <button @click="toggle = !toggle">
+      {{ update ? "Edit" : "Add" }} Product
+    </button>
     <div class="product-form" v-if="toggle">
       <form @submit.prevent="saveProduct">
         <label for="title">Title:</label>
@@ -55,7 +55,7 @@ function saveProduct() {
         <label for="image">Image:</label>
         <input type="text" id="image" v-model="image" required />
         <button type="submit">Save</button>
-        <button type="button">Close</button>
+        <button type="button" @click="toggle = false">cancel</button>
       </form>
     </div>
   </div>
